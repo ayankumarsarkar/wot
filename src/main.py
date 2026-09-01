@@ -1,18 +1,19 @@
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox 
 
 def main_layout(root):
-    label = tk.Label(root, text="Welcome!", font=("Ariel", 16))
+    label = ttk.Label(root, text="Welcome!", font=("Ariel", 16))
     label.pack(pady=20)
 
     def handle_click():
         user_text = entry_field.get()
         messagebox.showinfo("Alert", f"You typed: {user_text}")
     
-    entry_field = tk.Entry(root)
+    entry_field = ttk.Entry(root)
     entry_field.pack(pady=10)
     
-    action_btn = tk.Button(root, text="Submit", command=handle_click)
+    action_btn = ttk.Button(root, text="Submit", command=handle_click)
     action_btn.pack()
 
 def main():
