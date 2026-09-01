@@ -1,0 +1,3 @@
+# Workflow Organising Tool
+
+As of now the project is made using Tkinter library in Python. Going forward, it may be changed to Custom Tkinter of the sake of modernity but that is not the primary concern.
