@@ -1,5 +1,5 @@
 [project]
-name = "Workflow Organising Tool"
+name = "workflow_organising_tool"
 version = "0.2"
 description = "A better way of organising my workflow."
 readme = "README.adoc"
@@ -7,3 +7,4 @@ requires-python = ">= 3.14"
 dependencies = [
   "toga>=0.5.6",
 ]
+
