@@ -1,3 +1,13 @@
 # Workflow Organising Tool
 
-As of now the project is made using Tkinter library in Python. Going forward, it may be changed to Custom Tkinter of the sake of modernity but that is not the primary concern.
+The project was supposed to use [Themed] Tkinter library in Python. However, it quickly overwhelmed me and forced me to look for an alternative. That is how I ended up using *toga* (🐂)|.
+
+## Version History
+
+### Alpha Version
+
+#### v0.2 (Step 1)
+An app that shows the list of default paths and makes a list of directories with three letter uppercase code and '-'. Testing is Linux is not done yet (for fun).
+
+#### v0.1
+Nothing but an empty working programme (with tkinter library).
