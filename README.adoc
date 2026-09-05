@@ -6,6 +6,12 @@ The project was supposed to use [Themed] Tkinter library in Python. However, it 
 
 ### Alpha Version
 
+#### v0.3 (Step 2)
+Now each option in the list takes you to the direictory location. The app also shows remote location of projects (Google Drive needs to be installed and mounted).
+
+* Minor improvement on the Linux side. Though it does not run well. Caused by Gobject dependency
+
+
 #### v0.2 (Step 1)
 An app that shows the list of default paths and makes a list of directories with three letter uppercase code and '-'. Testing is Linux is not done yet (for fun).
 

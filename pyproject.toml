@@ -1,6 +1,6 @@
 [project]
 name = "workflow_organising_tool"
-version = "0.2"
+version = "0.3"
 description = "A better way of organising my workflow."
 readme = { file = "README.adoc", content-type = "text/markdown" }
 requires-python = ">= 3.13.5"
