@@ -12,6 +12,26 @@ archive_remote_path = r'H:/My Drive/2. Secondary - Fictions'
 
 project_list = []
 
+def show_list(widget):
+    if isinstance(widget, str):
+        print(widget)
+        items = []
+        for project in project_list:
+            project_box = toga.Box()
+            project_name = toga.Button(
+                text=f'{project['name']}', 
+                id=f'{project['name']}_project',
+                on_press=open_folder,
+                direction=COLUMN
+            )
+            project_type    = toga.Label(text=f'{project['type']}')
+
+            project_box.add(project_name, project_type)
+            items.append(project_box)
+        return items
+    else:
+        print(widget.text)
+
 def open_folder(widget):
     project_dictionary = [p for p in project_list if 'name' in p and p.get('name') == widget.text]
 
@@ -37,7 +57,12 @@ class WOT(toga.App):
         paths_box       = toga.Box(direction=COLUMN, margin=5)
         projects_box    = toga.Box(direction=COLUMN, margin=5)
 
-        topic_code_pattern = re.compile(r'^[A-Z]{3}-')
+        tabs_box                = toga.Box()
+        all_projects_tab        = toga.Button(text='All Projects', on_press=show_list)
+        active_projects_tab     = toga.Button(text='Active', on_press=show_list)
+        inactive_projects_tab   = toga.Button(text='Inactive', on_press=show_list)
+
+        tabs_box.add(all_projects_tab, active_projects_tab, inactive_projects_tab)
 
         active_label            = toga.Label(text='Active Projects Path: {}'.format(active_path))
         archive_label           = toga.Label(text='Archived Projects Path: {}'.format(archive_path))
@@ -46,6 +71,8 @@ class WOT(toga.App):
         paths_box.add(active_label)
         paths_box.add(archive_label)
         paths_box.add(archive_remote_label)
+
+        topic_code_pattern = re.compile(r'^[A-Z]{3}-')
 
         # Adding local projects
         for path in Path(archive_path).iterdir():
@@ -65,19 +92,11 @@ class WOT(toga.App):
                 }
                 project_list.append(project_data)
 
-        for project in project_list:
-            project_box = toga.Box()
-            project_name = toga.Button(
-                text=f'{project['name']}', 
-                id=f'{project['name']}_project',
-                on_press=open_folder,
-                direction=COLUMN
-            )
-            project_type    = toga.Label(text=f'{project['type']}')
+        list_items = show_list('All Projects')
 
-            project_box.add(project_name, project_type)
-            projects_box.add(project_box)
+        projects_box.add(*list_items)
 
+        box.add(tabs_box)
         box.add(paths_box)
         box.add(projects_box)
 
@@ -85,7 +104,7 @@ class WOT(toga.App):
         self.main_window.show()
 
 def main():
-    return WOT("Worflow Organising Tool", "in.new.wot")
+    return WOT("Workflow Organising Tool", "in.new.cube")
 
 if __name__ == "__main__":
     main().main_loop()
