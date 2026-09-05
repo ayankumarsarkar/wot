@@ -27,7 +27,7 @@ LicenseFile=D:\Projects\VSCode\wot\LICENSE
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=C:\Users\Admin\Documents\BFS-Basic File Server\.public
+OutputDir=C:\Users\Admin\Documents\Archive\BFS-Basic File Server\.public
 OutputBaseFilename=wot-installer.0.3
 SetupIconFile=D:\Projects\VSCode\wot\src\icons\brutus.ico
 SolidCompression=yes

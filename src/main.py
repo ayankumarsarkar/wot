@@ -7,30 +7,44 @@ from pathlib        import Path
 import os
 
 active_path         = r'C:/Users/Admin/Desktop'
-archive_path        = r'C:/Users/Admin/Documents'
+archive_path        = r'C:/Users/Admin/Documents/Archive'
 archive_remote_path = r'H:/My Drive/2. Secondary - Fictions'
 
-project_list = []
+project_list        = []
+project_list_active = []
+
+def make_active(widget):
+    print('Huh, what do you want me to do?')
 
 def show_list(widget):
     if isinstance(widget, str):
-        print(widget)
+        print(f"You've sent me a string of... what? {widget}?")
         items = []
         for project in project_list:
-            project_box = toga.Box()
-            project_name = toga.Button(
-                text=f'{project['name']}', 
-                id=f'{project['name']}_project',
-                on_press=open_folder,
-                direction=COLUMN
-            )
-            project_type    = toga.Label(text=f'{project['type']}')
-
-            project_box.add(project_name, project_type)
+            project_box             = toga.Box()
+            project_type            = toga.Label(text=f'{project['type']}')
+            project_state_button    = toga.Button(text='add to active', on_press=make_active)
+            project_name            = toga.Button(
+                                        text=f'{project['name']}',
+                                        id=f'{project['name']}_project',
+                                        on_press=open_folder, direction=COLUMN
+                                    )
+            project_box.add(project_name, project_type, project_state_button)
             items.append(project_box)
         return items
     else:
-        print(widget.text)
+        print(f"Here we go, some proper widgetty string of letters! \n {widget.text}")
+        if widget.text == 'Active':
+            print('These are currently active projects.')
+
+        elif widget.text == 'Inactive':
+            print('You should really consider finishing some of them.')
+
+        elif widget.text == 'All Projects':
+            print('Here are all your projects.')
+
+        else:
+            print('This is unexpected...')
 
 def open_folder(widget):
     project_dictionary = [p for p in project_list if 'name' in p and p.get('name') == widget.text]
@@ -64,9 +78,9 @@ class WOT(toga.App):
 
         tabs_box.add(all_projects_tab, active_projects_tab, inactive_projects_tab)
 
-        active_label            = toga.Label(text='Active Projects Path: {}'.format(active_path))
-        archive_label           = toga.Label(text='Archived Projects Path: {}'.format(archive_path))
-        archive_remote_label    = toga.Label(text='Remote Archive Projects Paths: {}'.format(archive_remote_path))
+        active_label            = toga.Label(text=f'Active Projects Path: {active_path}')
+        archive_label           = toga.Label(text=f'Archived Projects Path: {archive_path}')
+        archive_remote_label    = toga.Label(text=f'Remote Archive Projects Paths: {archive_remote_path}')
 
         paths_box.add(active_label)
         paths_box.add(archive_label)
