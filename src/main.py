@@ -1,19 +1,21 @@
-import toga
-from toga.constants import COLUMN
-
+import os
 import re
+import toga
+from toga.constants import COLUMN, CENTER as CENTRE
 from pathlib        import Path
 
-import os
+active_path             = r'C:/Users/Admin/Desktop'
+archive_path            = r'C:/Users/Admin/Documents/Archive'
+archive_remote_path     = r'H:/My Drive/2. Secondary - Fictions'
 
-active_path         = r'C:/Users/Admin/Desktop'
-archive_path        = r'C:/Users/Admin/Documents/Archive'
-archive_remote_path = r'H:/My Drive/2. Secondary - Fictions'
+project_list            = []
+project_list_active     = [
+    { 'name': 'WOT-Workflow Organising Tool', 'type': 'local'},
+    #{ 'name': '', 'type': 'local'},
+]
+project_list_inactive   = []
 
-project_list        = []
-project_list_active = []
-
-topic_code_pattern = re.compile(r'^[A-Z]{3}-')
+topic_code_pattern      = re.compile(r'^[A-Z]{3}-')
 
 # Adding local projects
 for path in Path(archive_path).iterdir():
@@ -33,18 +35,11 @@ for path in Path(archive_remote_path).iterdir():
         }
         project_list.append(project_data)
 
+# Making list of inactive projects
+project_list_inactive.extend([d for d in project_list if d not in project_list_active])
+
 def make_active(widget):
     print('Huh, what do you want me to do?')
-
-#def show_list(widget):
-#   if widget.text == 'Active':
-#       print('These are currently active projects.')
-#   elif widget.text == 'Inactive':
-#       print('You should really consider finishing some of them.')
-#   elif widget.text == 'All Projects':
-#       print('Here are all your projects.')
-#   else:
-#       print('This is unexpected...')
 
 def open_folder(widget, row):
     project_name        = row.name
@@ -67,15 +62,7 @@ class WOT(toga.App):
     def startup(self):
         box             = toga.Box(direction=COLUMN, margin=5)
         paths_box       = toga.Box(direction=COLUMN, margin=5)
-
-        #tab_container           = toga.OptionContainer(flex=1)
-        #tabs_box                = toga.Box()
-        #all_projects_tab        = toga.Button(text='All Projects', on_press=show_list)
-        #active_projects_tab     = toga.Button(text='Active', on_press=show_list)
-        #inactive_projects_tab   = toga.Button(text='Inactive', on_press=show_list)
-
-        #tabs_box.add(all_projects_tab, active_projects_tab, inactive_projects_tab)
-        #tab_container.content.append(tabs_box)
+        tabs_container  = toga.OptionContainer(flex=1)
 
         active_label            = toga.Label(text=f'Active Projects Path: {active_path}')
         archive_label           = toga.Label(text=f'Archived Projects Path: {archive_path}')
@@ -85,18 +72,55 @@ class WOT(toga.App):
         paths_box.add(archive_label)
         paths_box.add(archive_remote_label)
 
-        project_table = toga.Table(
-            columns     = ['Project Name', 'Location'],
-            accessors   = ['name', 'type'],
-            data=project_list,
-            on_activate=open_folder,
-            flex=1
+        all_project_tab        = toga.Box(
+            direction=COLUMN,
+            padding=20,
+            align_items=CENTRE
+        )
+        active_project_tab     = toga.Box(
+            direction=COLUMN,
+            padding=20,
+            align_items=CENTRE
+        )
+        inactive_project_tab   = toga.Box(
+            direction=COLUMN,
+            padding=20,
+            align_items=CENTRE
         )
 
+        all_project_table = toga.Table(
+            columns     = ['Project Name', 'Location'],
+            accessors   = ['name', 'type'],
+            data        = project_list,
+            on_activate = open_folder,
+            flex        = 1
+        )
+        active_project_table = toga.Table(
+            columns     = ['Project Name', 'Location'],
+            accessors   = ['name', 'type'],
+            data        = project_list_active,
+            on_activate = open_folder,
+            flex        = 1
+        )
+        inactive_project_table = toga.Table(
+            columns     = ['Project Name', 'Location'],
+            accessors   = ['name', 'type'],
+            data        = project_list_inactive,
+            on_activate = open_folder,
+            flex        = 1
+        )
+
+        all_project_tab.add(all_project_table)
+        active_project_tab.add(active_project_table)
+        inactive_project_tab.add(inactive_project_table)
+
+        tabs_container.content.append('All Projects', all_project_tab)
+        tabs_container.content.append('Active', active_project_tab)
+        tabs_container.content.append('Inactive', inactive_project_tab)
+
         box.add(
-            #tabs_box,
             paths_box, 
-            project_table
+            tabs_container
         )
 
         self.main_window = toga.MainWindow(content=box).show()
