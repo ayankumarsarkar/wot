@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 import toga
 from toga.constants import COLUMN, CENTER as CENTRE
 from pathlib        import Path
@@ -16,6 +17,7 @@ project_list_active     = [
 project_list_inactive   = []
 
 topic_code_pattern      = re.compile(r'^[A-Z]{3}-')
+# Also add a pattern for eliminating .lnk files
 
 # Adding local projects
 for path in Path(archive_path).iterdir():
@@ -37,6 +39,12 @@ for path in Path(archive_remote_path).iterdir():
 
 # Making list of inactive projects
 project_list_inactive.extend([d for d in project_list if d not in project_list_active])
+
+def system_theming(table1, table2, table3):
+    if sys.platform == 'win32':
+        table1._impl.native.Columns[0].Width = -1
+        table2._impl.native.Columns[0].Width = -1
+        table3._impl.native.Columns[0].Width = -1
 
 def make_active(widget):
     print('Huh, what do you want me to do?')
@@ -64,6 +72,7 @@ class WOT(toga.App):
         paths_box       = toga.Box(direction=COLUMN, margin=5)
         tabs_container  = toga.OptionContainer(flex=1)
 
+        # Make these Paths editable
         active_label            = toga.Label(text=f'Active Projects Path: {active_path}')
         archive_label           = toga.Label(text=f'Archived Projects Path: {archive_path}')
         archive_remote_label    = toga.Label(text=f'Remote Archive Projects Paths: {archive_remote_path}')
@@ -110,6 +119,8 @@ class WOT(toga.App):
             flex        = 1
         )
 
+    # A width of -1 auto-resizes the column to fit the longest item in it
+
         all_project_tab.add(all_project_table)
         active_project_tab.add(active_project_table)
         inactive_project_tab.add(inactive_project_table)
@@ -124,6 +135,7 @@ class WOT(toga.App):
         )
 
         self.main_window = toga.MainWindow(content=box).show()
+        system_theming(all_project_table, active_project_table, inactive_project_table)
 
 def main():
     return WOT("Workflow Organising Tool", "in.new.cube")
