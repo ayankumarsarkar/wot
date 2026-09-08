@@ -10,37 +10,52 @@ archive_path            = r'C:/Users/Admin/Documents/Archive'
 archive_remote_path     = r'H:/My Drive/2. Secondary - Fictions'
 
 project_list            = []
-project_list_active     = [
-    { 'name': 'WOT-Workflow Organising Tool', 'type': 'local'},
-    #{ 'name': '', 'type': 'local'},
-]
+project_list_active     = []
 project_list_inactive   = []
 
-topic_code_pattern      = re.compile(r'^[A-Z]{3}-')
+topic_code_pattern0     = re.compile(r'^[A-Z]{3}-')
 # Also add a pattern for eliminating .lnk files
 
-# Adding local projects
+# Adds local projects
 for path in Path(archive_path).iterdir():
-    if path.is_dir and topic_code_pattern.match(path.name):
+    if path.is_dir and topic_code_pattern0.match(path.name):
         project_data = {
             'name': path.name,
             'type': 'local'
         }
         project_list.append(project_data)
 
-# Adding remote projects
+
+# Adds remote projects
 for path in Path(archive_remote_path).iterdir():
-    if path.is_dir and topic_code_pattern.match(path.name):
+    if path.is_dir and topic_code_pattern0.match(path.name):
         project_data = {
             'name': path.name,
             'type': 'remote'
         }
         project_list.append(project_data)
 
-# Making list of inactive projects
-project_list_inactive.extend([d for d in project_list if d not in project_list_active])
+# Makes a list of active projects
+lnk_names = {
+    path.stem.lower().strip() for path in Path(active_path).glob('*.lnk')
+}
+
+for entry in project_list:
+    name = entry.get('name', '')
+    topic_code_pattern1 = re.findall(r'^[A-Z]{3}', name)
+    
+    first_3_words = ''.join(topic_code_pattern1[:3]).lower()
+    
+    if first_3_words in lnk_names:
+        project_list_active.append(entry)
+
+# Makes list of inactive projects
+project_list_inactive.extend([
+    d for d in project_list if d not in project_list_active
+])
 
 def system_theming(table1, table2, table3):
+    # A width of -1 auto-resizes the column to fit the longest item in it
     if sys.platform == 'win32':
         table1._impl.native.Columns[0].Width = -1
         table2._impl.native.Columns[0].Width = -1
@@ -81,6 +96,8 @@ class WOT(toga.App):
         paths_box.add(archive_label)
         paths_box.add(archive_remote_label)
 
+        create_new_project_button = toga.Button(text='New')
+
         all_project_tab        = toga.Box(
             direction=COLUMN,
             padding=20,
@@ -119,7 +136,6 @@ class WOT(toga.App):
             flex        = 1
         )
 
-    # A width of -1 auto-resizes the column to fit the longest item in it
 
         all_project_tab.add(all_project_table)
         active_project_tab.add(active_project_table)
@@ -131,6 +147,7 @@ class WOT(toga.App):
 
         box.add(
             paths_box, 
+            create_new_project_button, 
             tabs_container
         )
 

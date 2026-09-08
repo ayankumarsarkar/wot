@@ -8,6 +8,9 @@ This project is for organising my projects (as the name spoils). Inspired by thi
 
 ### Alpha Version
 
+#### 0.5 (Step 4)
+Added a button to create a new project.
+
 #### 0.4 (Step 3)
 Added three buttons "Active," "Inactive," and "All Projects" for management and made the project installable on Windows (Linux is uncertain mostly because it's not my target yet).
 
