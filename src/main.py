@@ -2,7 +2,7 @@ import os
 import re
 import sys
 import toga
-from toga.constants import COLUMN, CENTER as CENTRE
+from toga.constants import COLUMN, ROW, CENTER as CENTRE
 from pathlib        import Path
 
 active_path             = r'C:/Users/Admin/Desktop'
@@ -61,9 +61,6 @@ def system_theming(table1, table2, table3):
         table2._impl.native.Columns[0].Width = -1
         table3._impl.native.Columns[0].Width = -1
 
-def make_active(widget):
-    print('Huh, what do you want me to do?')
-
 def open_folder(widget, row):
     project_name        = row.name
     project_dictionary  = [p for p in project_list if 'name' in p and p.get('name') == project_name]
@@ -96,7 +93,7 @@ class WOT(toga.App):
         paths_box.add(archive_label)
         paths_box.add(archive_remote_label)
 
-        create_new_project_button = toga.Button(text='New')
+        create_new_project_button = toga.Button(text='New', on_press=self.create_new_project)
 
         all_project_tab        = toga.Box(
             direction=COLUMN,
@@ -153,6 +150,27 @@ class WOT(toga.App):
 
         self.main_window = toga.MainWindow(content=box).show()
         system_theming(all_project_table, active_project_table, inactive_project_table)
+
+    def create_new_project(self, widget):
+        title_input = toga.TextInput(placeholder='Title', padding=(0, 0, 10, 0), flex=1)
+        row_title = toga.Box(children=[title_input], direction=ROW)
+        code_input = toga.TextInput(placeholder='Code', padding=(0, 5, 10, 0), flex=1)
+        location_input = toga.TextInput(placeholder='Location', padding=(0, 0, 10, 5), flex=1)
+        row_inputs = toga.Box(children=[code_input, location_input], direction=ROW)
+        cancel_button = toga.Button('Cancel', on_press=self.close_dialogue, padding=(0, 5, 0, 0), flex=1)
+        create_button = toga.Button('Create', on_press=self.create_handler, padding=(0, 0, 0, 5), flex=1)
+        row_buttons = toga.Box(children=[cancel_button, create_button], direction=ROW)
+        dialogue_container = toga.Box(children=[row_title, row_inputs, row_buttons], direction=COLUMN, padding=20)
+
+        self.new_window = toga.Window(title='New Project', size=(260, 140))
+        self.new_window.content = dialogue_container
+        self.new_window.show()
+
+    def close_dialogue(self, widget):
+        self.new_window.close()
+
+    def create_handler(self, widget):
+        print('Huh, what do you want me to do?')
 
 def main():
     return WOT("Workflow Organising Tool", "in.new.cube")
