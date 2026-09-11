@@ -2,7 +2,16 @@
 
 The project was supposed to use [Themed] Tkinter library in Python. However, it quickly overwhelmed me and forced me to look for an alternative. That is how I ended up using *toga* (🐂)|.
 
-This project is for organising my projects (as the name spoils). Inspired by this article: https://medium.com/@roylowrance/how-i-organize-my-file-system-8b6f98ed4b43
+## Introduction
+Organize your project directories with ease. Quickly navigate between active and archived projects with a native desktop app.
+
+This program is for organising my projects (as the name spoils). Inspired by this article: https://medium.com/@roylowrance/how-i-organize-my-file-system-8b6f98ed4b43
+
+## Features
+- View all projects organized by status (Active/Inactive)
+- Quick access to local and remote project folders
+- Create new projects with code prefixes
+- Cross-platform support (Windows, Linux, macOS via Toga) [Untested]
 
 ## Version History
 
