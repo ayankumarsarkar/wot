@@ -17,27 +17,21 @@ project_list            = []
 project_list_active     = []
 project_list_inactive   = []
 
+def gather_projects(_path: Path, _type: str, _pattern, _project_list: list):
+    if _path.is_dir and _pattern.match(_path.name):
+        _project_data = { 'name': _path.name, 'type': _type }
+        return _project_list.append(_project_data)
+
 topic_code_pattern0     = re.compile(r'^[A-Z]{3}-')
 # Also add a pattern for eliminating .lnk files
 
 # Adds local projects
 for path in Path(archive_path).iterdir():
-    if path.is_dir and topic_code_pattern0.match(path.name):
-        project_data = {
-            'name': path.name,
-            'type': 'local'
-        }
-        project_list.append(project_data)
-
+    gather_projects(path, 'local', topic_code_pattern0, project_list)
 
 # Adds remote projects
 for path in Path(archive_remote_path).iterdir():
-    if path.is_dir and topic_code_pattern0.match(path.name):
-        project_data = {
-            'name': path.name,
-            'type': 'remote'
-        }
-        project_list.append(project_data)
+    gather_projects(path, 'remote', topic_code_pattern0, project_list)
 
 # Makes a list of active projects
 lnk_names = {
