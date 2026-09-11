@@ -1,6 +1,6 @@
 [project]
 name = "workflow_organising_tool"
-version = "0.5"
+version = "0.5-b"
 description = "A better way of organising my workflow."
 readme = { 
   file = "README.adoc", 
@@ -16,5 +16,6 @@ classifiers = [
 ]
 dependencies = [
   "toga>=0.5.6",
+  "tomlkit>=0.15.1"
 ]
 

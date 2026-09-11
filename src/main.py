@@ -4,10 +4,10 @@ import sys
 import toga
 from toga.constants import COLUMN, ROW, CENTER as CENTRE
 from pathlib        import Path
-import tomllib
+import tomlkit
 
 with open('src/config.toml', 'rb') as f:
-    config = tomllib.load(f)
+    config = tomlkit.load(f)
 
 active_path             = config['paths']['active_path']
 archive_path            = config['paths']['archive_path']
@@ -92,6 +92,11 @@ class WOT(toga.App):
         paths_box.add(archive_remote_label)
 
         create_new_project_button = toga.Button(text='New', on_press=self.create_new_project)
+        edit_project_paths_button = toga.Button(text='Edit', on_press=self.edit_paths)
+        buttons = toga.Box(children=[
+            create_new_project_button,
+            edit_project_paths_button
+        ], direction=ROW)
 
         all_project_tab        = toga.Box(
             direction=COLUMN,
@@ -142,7 +147,7 @@ class WOT(toga.App):
 
         box.add(
             paths_box, 
-            create_new_project_button, 
+            buttons, 
             tabs_container
         )
 
@@ -195,6 +200,68 @@ class WOT(toga.App):
             self.new_window.error_dialog("Error", "You do not have permission to create a project here.")
         except Exception as e:
             self.new_window.error_dialog("Error", f"Failed to create project:\n{str(e)}")
+
+    def edit_paths(self, widget):
+        active_path_label   = toga.Label(text='Active Path:')
+        active_path_input   = toga.TextInput(
+            placeholder=config['paths']['active_path'],
+            flex=1
+        )
+        active_path_box     = toga.Box(children=[
+            active_path_label, active_path_input
+        ], direction=ROW)
+
+        archive_path_label  = toga.Label(text='Active Path:')
+        archive_path_input  = toga.TextInput(
+            placeholder=config['paths']['archive_path'],
+            flex=1
+        )
+        archive_path_box    = toga.Box(children=[
+            archive_path_label, archive_path_input
+        ], direction=ROW)
+
+        archive_remote_path_label   = toga.Label(text='Active Path:')
+        archive_remote_path_input   = toga.TextInput(
+            placeholder=config['paths']['archive_remote_path'],
+            flex=1
+        )
+        archive_remote_path_box     = toga.Box(children=[
+            archive_remote_path_label, archive_remote_path_input
+        ], direction=ROW)
+
+        def save_paths(widget):
+            path1 = active_path_input.value
+            path2 = archive_path_input.value
+            path3 = archive_remote_path_input.value
+
+            print('Save button pressed')
+            if path1 != '' and Path(path1).exists():
+                print('All is well... value is not empty')
+                config['paths']['active_path'] = path1
+
+            if path2 != '' and Path(path2).exists():
+                print('All is well... value is not empty')
+                config['paths']['active_path'] = path2
+
+            if path3 != '' and Path(path3).exists():
+                print('All is well... value is not empty')
+                config['paths']['active_path'] = path3
+
+            with open('src/config.toml', 'w', encoding='utf-8') as f:
+                tomlkit.dump(config, f)
+
+        save_button = toga.Button(text='Save', on_press=save_paths)
+
+        input_box                   = toga.Box(children=[
+            active_path_box,
+            archive_path_box,
+            archive_remote_path_box,
+            save_button
+        ], direction=COLUMN)
+
+        self.path_editor = toga.Window(title='Edit Paths', size=(260, 140))
+        self.path_editor.content = input_box
+        self.path_editor.show()
 
 def main():
     return WOT("Workflow Organising Tool", "in.new.cube")
