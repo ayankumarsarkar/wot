@@ -4,10 +4,14 @@ import sys
 import toga
 from toga.constants import COLUMN, ROW, CENTER as CENTRE
 from pathlib        import Path
+import tomllib
 
-active_path             = r'C:/Users/Admin/Desktop'
-archive_path            = r'C:/Users/Admin/Documents/Archive'
-archive_remote_path     = r'H:/My Drive/2. Secondary - Fictions'
+with open('src/config.toml', 'rb') as f:
+    config = tomllib.load(f)
+
+active_path             = config['paths']['active_path']
+archive_path            = config['paths']['archive_path']
+archive_remote_path     = config['paths']['archive_remote_path']
 
 project_list            = []
 project_list_active     = []
@@ -132,7 +136,7 @@ class WOT(toga.App):
             on_activate = open_folder,
             flex        = 1
         )
-
+        # Add a way of refreshing the lists/tables
 
         all_project_tab.add(all_project_table)
         active_project_tab.add(active_project_table)

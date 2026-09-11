@@ -1,0 +1,5 @@
+# config.toml
+[paths]
+active_path = "C:/Users/Admin/Desktop"
+archive_path = "C:/Users/Admin/Documents/Archive"
+archive_remote_path = "H:/My Drive/2. Secondary - Fictions"

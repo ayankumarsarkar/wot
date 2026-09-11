@@ -8,8 +8,11 @@ This project is for organising my projects (as the name spoils). Inspired by thi
 
 ### Alpha Version
 
+#### 0.6 (Step 5)
+Add the ability to create shortcuts on Desktop
+
 #### 0.5 (Step 4)
-Added a button to create a new project.
+Added a button to create a new project at archive location. Changed the earlier buttons to proper table. 
 
 #### 0.4 (Step 3)
 Added three buttons "Active," "Inactive," and "All Projects" for management and made the project installable on Windows (Linux is uncertain mostly because it's not my target yet).

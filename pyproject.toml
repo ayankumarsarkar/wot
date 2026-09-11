@@ -1,12 +1,19 @@
 [project]
 name = "workflow_organising_tool"
-version = "0.4.3"
+version = "0.5"
 description = "A better way of organising my workflow."
 readme = { 
   file = "README.adoc", 
-  content-type = "text/markdown"
+  content-type = "text/x-asciidoc"
 }
 requires-python = ">= 3.13.5"
+license = {
+  text = "All Rights Reserved"
+}
+keywords = [ "productivity", "workflow", "project-management" ]
+classifiers = [
+  "Operating System :: Windows 11"
+]
 dependencies = [
   "toga>=0.5.6",
 ]
