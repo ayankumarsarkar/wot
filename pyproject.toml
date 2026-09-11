@@ -1,6 +1,6 @@
 [project]
 name = "workflow_organising_tool"
-version = "0.4.2"
+version = "0.4.3"
 description = "A better way of organising my workflow."
 readme = { 
   file = "README.adoc", 

@@ -152,14 +152,17 @@ class WOT(toga.App):
         system_theming(all_project_table, active_project_table, inactive_project_table)
 
     def create_new_project(self, widget):
-        title_input = toga.TextInput(placeholder='Title', padding=(0, 0, 10, 0), flex=1)
-        row_title = toga.Box(children=[title_input], direction=ROW)
-        code_input = toga.TextInput(placeholder='Code', padding=(0, 5, 10, 0), flex=1)
-        location_input = toga.TextInput(placeholder='Location', padding=(0, 0, 10, 5), flex=1)
-        row_inputs = toga.Box(children=[code_input, location_input], direction=ROW)
-        cancel_button = toga.Button('Cancel', on_press=self.close_dialogue, padding=(0, 5, 0, 0), flex=1)
-        create_button = toga.Button('Create', on_press=self.create_handler, padding=(0, 0, 0, 5), flex=1)
-        row_buttons = toga.Box(children=[cancel_button, create_button], direction=ROW)
+        self.title_input = toga.TextInput(placeholder='Title', padding=(0, 0, 10, 0), flex=1)
+        row_title   = toga.Box(children=[self.title_input], direction=ROW)
+
+        self.code_input      = toga.TextInput(placeholder='Code', padding=(0, 5, 10, 0), flex=1)
+        location_input  = toga.TextInput(placeholder='Location', padding=(0, 0, 10, 5), flex=1)
+        row_inputs      = toga.Box(children=[self.code_input, location_input], direction=ROW)
+
+        cancel_button   = toga.Button('Cancel', on_press=self.close_dialogue, padding=(0, 5, 0, 0), flex=1)
+        create_button   = toga.Button('Create', on_press=self.create_handler, padding=(0, 0, 0, 5), flex=1)
+        row_buttons     = toga.Box(children=[cancel_button, create_button], direction=ROW)
+
         dialogue_container = toga.Box(children=[row_title, row_inputs, row_buttons], direction=COLUMN, padding=20)
 
         self.new_window = toga.Window(title='New Project', size=(260, 140))
@@ -170,7 +173,30 @@ class WOT(toga.App):
         self.new_window.close()
 
     def create_handler(self, widget):
-        print('Huh, what do you want me to do?')
+        title = self.title_input.value
+        code = self.code_input.value.strip()
+
+        if not title or not code:
+            print('Huh, what do you want me to do?')
+            self.new_window.error_dialog('Missing Information', 'Huh, what do you want me to do?')
+            return
+
+        try:
+            archive_dir     = Path(archive_path)
+            project_name    = f'{code}-{title}'
+            target_path     = archive_dir/project_name
+
+            target_path.mkdir(parents=True, exist_ok=False)
+
+            self.new_window.info_dialog("Success", f"Created project:\n{target_path}")
+            self.new_window.close()
+            
+        except FileExistsError:
+            self.new_window.error_dialog("Error", f"The project '{project_name}' already exists at this location.")
+        except PermissionError:
+            self.new_window.error_dialog("Error", "You do not have permission to create a project here.")
+        except Exception as e:
+            self.new_window.error_dialog("Error", f"Failed to create project:\n{str(e)}")
 
 def main():
     return WOT("Workflow Organising Tool", "in.new.cube")
