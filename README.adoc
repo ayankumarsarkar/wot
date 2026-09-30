@@ -7,11 +7,16 @@ Organize your project directories with ease. Quickly navigate between active and
 
 This program is for organising my projects (as the name spoils). Inspired by this article: https://medium.com/@roylowrance/how-i-organize-my-file-system-8b6f98ed4b43
 
+image::screenshot.png[]
+
 ## Features
 - View all projects organized by status (Active/Inactive)
 - Quick access to local and remote project folders
 - Create new projects with code prefixes
 - Cross-platform support (Windows, Linux, macOS via Toga) [Untested]
+
+## Installation
+So far this project has not compiled well on other PCs without issues.
 
 ## Version History
 

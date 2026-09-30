@@ -4,7 +4,9 @@ import sys
 import toga
 from toga.constants import COLUMN, ROW, CENTER as CENTRE
 from pathlib        import Path
+#from typing         import List, Dict
 import tomlkit
+import lnk_file
 
 with open('src/config.toml', 'rb') as f:
     config = tomlkit.load(f)
@@ -13,11 +15,11 @@ active_path             = config['paths']['active_path']
 archive_path            = config['paths']['archive_path']
 archive_remote_path     = config['paths']['archive_remote_path']
 
-project_list            = []
-project_list_active     = []
-project_list_inactive   = []
+project_list          = []
+project_list_active   = []
+project_list_inactive = []
 
-def gather_projects(_path: Path, _type: str, _pattern, _project_list: list):
+def gather_projects(_path: Path, _type: str, _pattern, _project_list: list) -> None:
     if _path.is_dir and _pattern.match(_path.name):
         _project_data = { 'name': _path.name, 'type': _type }
         return _project_list.append(_project_data)
@@ -37,6 +39,8 @@ for path in Path(archive_remote_path).iterdir():
 lnk_names = {
     path.stem.lower().strip() for path in Path(active_path).glob('*.lnk')
 }
+
+print(lnk_names)
 
 for entry in project_list:
     name = entry.get('name', '')
@@ -59,7 +63,7 @@ def system_theming(table1, table2, table3):
         table2._impl.native.Columns[0].Width = -1
         table3._impl.native.Columns[0].Width = -1
 
-def open_folder(widget, row):
+def open_folder(widget, row) -> None:
     project_name        = row.name
     project_dictionary  = [p for p in project_list if 'name' in p and p.get('name') == project_name]
 
