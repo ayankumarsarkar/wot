@@ -1,4 +1,5 @@
 import pylnk3
+#from pathlib import Path
 
 def create(file_path: str, lnk_name: str, file_description: str):
   # Creates a shortcut pointing to notepad.exe

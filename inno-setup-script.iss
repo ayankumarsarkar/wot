@@ -7,8 +7,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{D5D012FD-1B1B-4645-B2D5-FBEB6A38A202}
 AppName=Workflow
-AppVersion=0.5
-;AppVerName={cm:NameAndVersion,Workflow,0.5}
+AppVersion=0.6
+;AppVerName={cm:NameAndVersion,Workflow,0.6}
 AppPublisher=Cube Inc.
 AppPublisherURL=https://cube.new.in/
 AppSupportURL=https://cube.new.in/
@@ -28,7 +28,7 @@ LicenseFile=D:\Projects\VSCode\wot\LICENSE
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=C:\Users\Admin\Documents\Archive\BFS-Basic File Server\.public
-OutputBaseFilename=wot-installer-0.5
+OutputBaseFilename=wot-installer-0.6
 SetupIconFile=D:\Projects\VSCode\wot\src\icons\brutus.ico
 SolidCompression=yes
 WizardStyle=modern dynamic windows11

@@ -8,7 +8,17 @@ from pathlib        import Path
 import tomlkit
 import lnk_file
 
-with open('src/config.toml', 'rb') as f:
+# Temporary Solution
+selected_project: str
+
+if hasattr(sys, 'frozen'):
+    base_dir = os.path.dirname(sys.executable)
+else:
+    base_dir = os.path.abspath("src")
+
+config_path = os.path.join(base_dir, 'config.toml')
+
+with open(config_path, 'rb') as f:
     config = tomlkit.load(f)
 
 active_path             = config['paths']['active_path']
@@ -80,6 +90,21 @@ def open_folder(widget, row) -> None:
     else:
         print(f"Eww, I won't go to {project_name}!")
 
+def get_name(widget) -> None:
+    selected_project = widget.selection.name
+    print("\nSelection: ", selected_project, "\n")
+
+    lnk_name = re.findall(r'^[A-Z]{3}', selected_project)
+    print("\nLink Name: ", lnk_name, "\n")
+
+    lnk_path = f"{active_path}/{lnk_name[0]}.lnk"
+    print("\nLink Path: ", lnk_path, "\n")
+
+    project_path_archive = f"{archive_path}/{selected_project}"
+    print("\nCurrent Location: ", project_path_archive, "\n")
+
+    lnk_file.create(project_path_archive, lnk_path, "WOT Project")
+
 class WOT(toga.App):
     def startup(self):
         box             = toga.Box(direction=COLUMN, margin=5)
@@ -90,10 +115,11 @@ class WOT(toga.App):
         active_label            = toga.Label(text=f'Active Projects Path: {active_path}')
         archive_label           = toga.Label(text=f'Archived Projects Path: {archive_path}')
         archive_remote_label    = toga.Label(text=f'Remote Archive Projects Paths: {archive_remote_path}')
-
         paths_box.add(active_label)
         paths_box.add(archive_label)
         paths_box.add(archive_remote_label)
+
+        tips            = toga.Label(text=f'One tap = make active, Two taps = open directory')
 
         create_new_project_button = toga.Button(text='New', on_press=self.create_new_project)
         edit_project_paths_button = toga.Button(text='Edit', on_press=self.edit_paths)
@@ -123,6 +149,7 @@ class WOT(toga.App):
             accessors   = ['name', 'type'],
             data        = project_list,
             on_activate = open_folder,
+            on_select   = get_name,
             flex        = 1
         )
         active_project_table = toga.Table(
@@ -150,7 +177,8 @@ class WOT(toga.App):
         tabs_container.content.append('Inactive', inactive_project_tab)
 
         box.add(
-            paths_box, 
+            paths_box,
+            tips, 
             buttons, 
             tabs_container
         )
@@ -159,10 +187,10 @@ class WOT(toga.App):
         system_theming(all_project_table, active_project_table, inactive_project_table)
 
     def create_new_project(self, widget):
-        self.title_input = toga.TextInput(placeholder='Title', padding=(0, 0, 10, 0), flex=1)
-        row_title   = toga.Box(children=[self.title_input], direction=ROW)
+        self.title_input= toga.TextInput(placeholder='Title', padding=(0, 0, 10, 0), flex=1)
+        row_title       = toga.Box(children=[self.title_input], direction=ROW)
 
-        self.code_input      = toga.TextInput(placeholder='Code', padding=(0, 5, 10, 0), flex=1)
+        self.code_input = toga.TextInput(placeholder='Code', padding=(0, 5, 10, 0), flex=1)
         location_input  = toga.TextInput(placeholder='Location', padding=(0, 0, 10, 5), flex=1)
         row_inputs      = toga.Box(children=[self.code_input, location_input], direction=ROW)
 
@@ -188,9 +216,9 @@ class WOT(toga.App):
             self.new_window.error_dialog('Missing Information', 'Huh, what do you want me to do?')
             return
 
+        project_name = f'{code}-{title}'
         try:
             archive_dir     = Path(archive_path)
-            project_name    = f'{code}-{title}'
             target_path     = archive_dir/project_name
 
             target_path.mkdir(parents=True, exist_ok=False)
