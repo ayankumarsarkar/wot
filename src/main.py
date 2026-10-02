@@ -90,20 +90,37 @@ def open_folder(widget, row) -> None:
     else:
         print(f"Eww, I won't go to {project_name}!")
 
+# CREATES AN LNK FILE ON DESKTOP AFTER GETTING ITS NAME
 def get_name(widget) -> None:
-    selected_project = widget.selection.name
-    print("\nSelection: ", selected_project, "\n")
+    name = widget.selection.name
+    selection_type = widget.selection.type
 
-    lnk_name = re.findall(r'^[A-Z]{3}', selected_project)
+    print("\nSelection Name: ", name, "\n")
+    print("\nSelection Type: ", selection_type, "\n")
+
+    lnk_name = re.findall(r'^[A-Z]{3}', name)
+    if not lnk_name:
+        print(f"\nNo project code found in name: {name}\n")
+        return
+
     print("\nLink Name: ", lnk_name, "\n")
 
     lnk_path = f"{active_path}/{lnk_name[0]}.lnk"
     print("\nLink Path: ", lnk_path, "\n")
 
-    project_path_archive = f"{archive_path}/{selected_project}"
-    print("\nCurrent Location: ", project_path_archive, "\n")
+    project_path = None
 
-    lnk_file.create(project_path_archive, lnk_path, "WOT Project")
+    if selection_type == 'local':
+        project_path = f"{archive_path}/{name}"
+    elif selection_type == 'remote':
+        project_path = f"{archive_remote_path}/{name}"
+    else:
+        print(f"\nUnsupported project type: {selection_type}\n")
+        return
+
+    print("\nCurrent Location: ", project_path, "\n")
+
+    lnk_file.create(project_path, lnk_path, "WOT Project")
 
 class WOT(toga.App):
     def startup(self):
